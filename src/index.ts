@@ -2,8 +2,8 @@
 import { connect, createIndex, addResult, getResult, getTagMappings } from "./db"
 import { StashApp } from "./stash-app"
 import { genID, helpText, ScrapeTypeArr, ScrapeTypeTypings } from "./utils"
-import { loadEnvFile } from "process"
 import { createTagMappings } from "./populate_tags"
+import 'dotenv/config'
 
 import Koa from "koa"
 const app = new Koa()
@@ -14,7 +14,6 @@ import serve from 'koa-static';
 import Router from '@koa/router';
 const router = new Router();
 
-loadEnvFile()
 
 // apikey validatorv
 const validateApiKey = (ctx: Koa.Context, next: Koa.Next) => {
@@ -61,7 +60,6 @@ router.get("/api/result/:type/{*lookup}", async (ctx) => {
     ctx.body = `Invalid scrape type. Valid types are: ${ScrapeTypeArr.join(', ')}`
     return
   }
-  console.log(lookup)
   const result = await getResult(type as ScrapeTypeTypings, lookup)
   if (!result) {
     ctx.status = 404
@@ -150,4 +148,8 @@ connect()
 
 app.listen(process.env.PORT || 3000, () => {
   console.log(`Server running on port ${process.env.PORT || 3000}`);
+});
+
+process.on('SIGINT', function() {
+  process.exit()
 });

@@ -3,13 +3,16 @@
 		"@koa/bodyparser": "^6.0.0",
 		"@koa/cors": "^5.0.0",
 		"@koa/router": "^15.2.0",
-		"@types/koa": "^3.0.1",
-		"@types/koa-static": "^4.0.4",
-		"@types/koa__cors": "^5.0.1",
 		"axios": "^1.13.2",
+		"dotenv": "^17.2.3",
 		"koa": "^3.1.1",
 		"koa-static": "^5.0.0",
 		"mongodb": "^7.0.0"
 	},
-	"packageManager": "pnpm@10.28.1+sha512.7d7dbbca9e99447b7c3bf7a73286afaaf6be99251eb9498baefa7d406892f67b879adb3a1d7e687fc4ccc1a388c7175fbaae567a26ab44d1067b54fcb0d6a316"
+	"packageManager": "pnpm@10.28.1+sha512.7d7dbbca9e99447b7c3bf7a73286afaaf6be99251eb9498baefa7d406892f67b879adb3a1d7e687fc4ccc1a388c7175fbaae567a26ab44d1067b54fcb0d6a316",
+	"devDependencies": {
+		"@types/koa": "^3.0.1",
+		"@types/koa-static": "^4.0.4",
+		"@types/koa__cors": "^5.0.1"
+	}
 }

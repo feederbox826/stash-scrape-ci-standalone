@@ -1,8 +1,5 @@
 import axios from "axios";
 import { tagCollection } from "./db";
-import { loadEnvFile } from "process"
-
-loadEnvFile()
 
 const stashdb = axios.create({
   baseURL: "https://stashdb.org/graphql",

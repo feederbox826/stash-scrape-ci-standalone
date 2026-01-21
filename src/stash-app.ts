@@ -70,7 +70,6 @@ export class StashApp {
       const interval = setInterval(async () => {
         const status = await this.getJobStatus(jobId)
           .then(data => data.findJob?.status)
-        console.log(`Job status: ${status}`)
         if (status === 'FINISHED') {
           clearInterval(interval)
           resolve(true)
