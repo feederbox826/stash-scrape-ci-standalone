@@ -111,7 +111,7 @@ export class StashApp {
     migrate(input: { backupPath: "/dev/null" })
   }`)
 
-  scrape(url: URL, scrapeType: ScrapeTypeTypings) {
+  scrape(url: string, scrapeType: ScrapeTypeTypings) {
     const queryMap = new Map([
       ['performer', performerQuery],
       ['scene', sceneQuery],
@@ -120,15 +120,15 @@ export class StashApp {
       ['group', groupQuery],
     ])
     // catch unknown scrape type
-    if (!queryMap.has(scrapeType as unknown as string)) {
+    if (!queryMap.has(scrapeType)) {
       throw new Error(`Unknown scrape type: ${scrapeType}`)
     }
-    const queryString = queryMap.get(scrapeType as unknown as string) as string
+    const queryString = queryMap.get(scrapeType) as string
     return this.callGQL(queryString, { url })
       .then(data => cleanScrapeResult(data[Object.keys(data)[0]]))
   }
 
-  async startScrape(url: URL, scrapeType: ScrapeTypeTypings) {
+  async startScrape(url: string, scrapeType: ScrapeTypeTypings) {
     const stashInfo = await this.getStashInfo()
     let error, result
     try {
@@ -153,7 +153,7 @@ export class StashApp {
 }
 
 // generic helpers
-function cleanScrapeResult(result: Record<string, any>): Record<string, any> {
+function cleanScrapeResult(result: Record<string, any>) {
   const cleaned: Record<string, any> = {}
   for (const [key, value] of Object.entries(result)) {
     if (value == null) cleaned[key] = null
@@ -178,8 +178,8 @@ function cleanScrapeResult(result: Record<string, any>): Record<string, any> {
 
 // get chrome useragent
 const getChromeUA = () =>
-  fetch("https://jnrbsn.github.io/user-agents/user-agents.json")
-    .then(res => res.json())
+  axios.get("https://jnrbsn.github.io/user-agents/user-agents.json")
+    .then(res => res.data)
     .then(userAgents => userAgents[3])
 
 // static query definitions

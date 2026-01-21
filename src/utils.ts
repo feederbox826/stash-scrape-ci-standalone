@@ -1,5 +1,5 @@
 // scrape types
-export type ScrapeTypeTypings = [
+export type ScrapeTypeTypings = string & [
   'performer',
   'scene',
   'gallery',

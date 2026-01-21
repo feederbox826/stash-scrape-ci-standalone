@@ -1,10 +1,10 @@
 import { MongoClient } from "mongodb";
-import { ScrapeTypeArr } from "./utils";
+import { ScrapeTypeArr, ScrapeTypeTypings } from "./utils";
 
 const uri = process.env.MONGODB_URI || "mongodb://localhost:27017/stash-ci";
 const client = new MongoClient(uri);
 
-export const db = client.db();
+const db = client.db();
 
 export async function connect() {
   await client.connect();
@@ -19,18 +19,40 @@ export async function createIndex() {
   for (const coll of collections) {
     const collection = db.collection(coll);
     await collection.createIndex({ url: 1 }, { unique: true });
-    await collection.createIndex({ jobID: 1 }, { unique: true });
+    await collection.createIndex({ jobId: 1 }, { unique: true });
   }
+  // tags index
+  const tagCollection = db.collection("tags");
+  await tagCollection.createIndex({ lookup: 1 }, { unique: true });
+}
+
+export async function getResult(type: ScrapeTypeTypings, lookup: string) {
+  const validCollection = ScrapeTypeArr.includes(type);
+  if (!validCollection) {
+    throw new Error(`Invalid scrape type: ${type}`);
+  }
+  const collection = db.collection(type);
+  const doc = await collection.findOne({ $or: [{ jobId: lookup }, { url: lookup }] });
+  return doc ? doc : null;
+}
+
+export async function addResult(type: ScrapeTypeTypings, cachedResult: any) {
+  const validCollection = ScrapeTypeArr.includes(type);
+  if (!validCollection) {
+    throw new Error(`Invalid scrape type: ${type}`);
+  }
+  const collection = db.collection(type);
+  await collection.insertOne(cachedResult);
 }
 
 // db structure
 // maintain seperate collection for each entity type
 // performer, scene, gallery, image, group
-// index by URL and jobID
+// index by URL and jobId
 
 // config
 // stores scraperLastUpdate timestamp
-export const configCollection = db.collection("config");
+const configCollection = db.collection("config");
 export const getLastScraperUpdate = async (): Promise<number | null> => {
   const doc = await configCollection.findOne({ key: "scraperLastUpdate" });
   return doc ? (doc.value as number) : null;
@@ -41,11 +63,15 @@ export const getLastScraperUpdate = async (): Promise<number | null> => {
 export const tagCollection = db.collection("tags");
 export const getTagMappings = async (tags: String[]): Promise<{id?: string, name: string}[]> => {
   // convert tags to lowercase
-  const lowerTags = tags.map(tag => tag.toLowerCase());
+  const lowerTags = [... new Set(tags.map(tag => tag.toLowerCase()))];
   const mappings: {id?: string, name: string}[] = [];
-  const search = await tagCollection.find({ search_term: { $in: lowerTags } }).toArray();
-  for (const doc of search) {
-    mappings.push({id: doc.stash_id, name: doc.name});
+  for (const tag of lowerTags) {
+    const match = await tagCollection.findOne({ lookup: tag });
+    if (match) {
+      mappings.push({id: match.id, name: match.name});
+    } else {
+      mappings.push({name: tag});
+    }
   }
   return mappings;
 }
