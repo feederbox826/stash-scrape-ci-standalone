@@ -7,11 +7,15 @@ RUN npm install
 RUN npm i -g typescript
 RUN tsc
 
-FROM node:alpine AS final
+FROM scratch AS assemble
 WORKDIR /app
 COPY package.json .
 COPY public ./public
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/package-lock.json .
+
+FROM node:alpine AS final
+WORKDIR /app
+COPY --from=assemble /app ./
 RUN npm ci
 CMD ["dist/src/index.js"]

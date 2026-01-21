@@ -50,3 +50,7 @@ services:
       - /home/stash/app/caddy/data:/data:rw
       - /home/stash/app/caddy/config:/config:rw
       - /home/stash/app/caddy/caddy:/etc/caddy:ro
+  scrape_ci:
+    container_name: scrape_ci
+    image: ghcr.io/feederbox826/scrape-ci:latest
+    << : *user-defaults
