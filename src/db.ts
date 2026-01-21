@@ -36,13 +36,16 @@ export async function getResult(type: ScrapeTypeTypings, lookup: string) {
   return doc ? doc : null;
 }
 
-export async function addResult(type: ScrapeTypeTypings, cachedResult: any) {
+export async function addResult(type: ScrapeTypeTypings, cachedResult: any, url: string) {
   const validCollection = ScrapeTypeArr.includes(type);
   if (!validCollection) {
     throw new Error(`Invalid scrape type: ${type}`);
   }
   const collection = db.collection(type);
-  await collection.insertOne(cachedResult);
+  await collection.insertOne({
+    url,
+    ...cachedResult
+  });
 }
 
 // db structure

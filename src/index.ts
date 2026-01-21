@@ -123,7 +123,7 @@ router.post("/api/scrape", validateApiKey, async (ctx) => {
     logs,
   }
   // insert
-  addResult(body.scrapeType as ScrapeTypeTypings, cachedResult)
+  addResult(body.scrapeType as ScrapeTypeTypings, cachedResult, body.url)
   ctx.body = cachedResult
 })
 
