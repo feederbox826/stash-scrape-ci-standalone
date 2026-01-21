@@ -37,6 +37,12 @@ const getAllTags = async() => {
 
 // flatten tags for mongodb insertion
 export const createTagMappings = async () => {
+  // check if collection has any documents
+  const count = await tagCollection.countDocuments()
+  if (count > 0) {
+    console.log("Tag mappings already exist, skipping creation")
+    return
+  }
   const allTags = await getAllTags()
   const tagMappings: {id: string, name: string, lookup: string[]}[] = []
   for (const tag of allTags) {

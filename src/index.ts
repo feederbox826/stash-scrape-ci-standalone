@@ -139,8 +139,8 @@ app.use(serve('public', { extensions: ['html'] }));
 connect()
   .then(() => createIndex())
   .then(() => console.log("Connected to database"))
-  // .then(() => createTagMappings())
-  // .then(() => console.log("Tag mappings populated"))
+  .then(() => createTagMappings())
+  .then(() => console.log("Tag mappings populated"))
   .catch(err => {
     console.error("Failed to connect to database:", err)
     process.exit(1)
