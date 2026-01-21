@@ -1,5 +1,6 @@
 import axios from "axios";
 import { tagCollection } from "./db";
+import 'dotenv/config'
 
 const stashdb = axios.create({
   baseURL: "https://stashdb.org/graphql",

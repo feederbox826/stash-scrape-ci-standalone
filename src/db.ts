@@ -56,9 +56,17 @@ export async function addResult(type: ScrapeTypeTypings, cachedResult: any, url:
 // config
 // stores scraperLastUpdate timestamp
 const configCollection = db.collection("config");
-export const getLastScraperUpdate = async (): Promise<number | null> => {
+export const getLastScraperUpdate = async (): Promise<boolean> => {
   const doc = await configCollection.findOne({ key: "scraperLastUpdate" });
-  return doc ? (doc.value as number) : null;
+  // time greater than 24 hours ago
+  return doc ? new Date(doc.value).getTime() <= new Date().getTime() - 1000 * 60 * 60 * 24 : false;
+}
+export const setLastScraperUpdate = async () => {
+  await configCollection.updateOne(
+    { key: "scraperLastUpdate" },
+    { $set: { value: new Date().toISOString() } },
+    { upsert: true }
+  );
 }
 
 // tags

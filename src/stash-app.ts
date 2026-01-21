@@ -1,4 +1,4 @@
-import { getLastScraperUpdate } from "./db"
+import { getLastScraperUpdate, setLastScraperUpdate } from "./db"
 import { ScrapeTypeTypings } from "./utils"
 import { scraperSearch } from "./scraper-index"
 import { installedPackage, logEntry } from "../types/stashapp"
@@ -42,7 +42,7 @@ export class StashApp {
 
   checkUpdatePackages = async (force = false) => {
     const lastUpdate = await getLastScraperUpdate()
-    // check if key exists
+    // check if within update period
     if (force || !lastUpdate) {
       console.log("Updating scrapers...")
       await this.updateScrapers()
@@ -54,6 +54,8 @@ export class StashApp {
       console.log("Scrapers updated")
       // reload scrapers
       await this.callGQL(`mutation { reloadScrapers }`)
+      // push update
+      setLastScraperUpdate()
     } else {
       console.log("Scrapers already up to date")
     }
