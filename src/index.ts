@@ -92,7 +92,7 @@ router.post("/api/scrape", validateApiKey, async (ctx) => {
   const searchResult = await stash.urlSeachScrapers(body.url)
   if (searchResult && "error" in searchResult) {
     ctx.status = 400
-    ctx.body = searchResult.error
+    ctx.body = searchResult
     return
   }
   const jobId = genID()
