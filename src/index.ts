@@ -69,9 +69,11 @@ router.post("/api/scrape", validateApiKey, async (ctx) => {
     ctx.body = `Invalid scrapeType. Valid types are: scene`
     return
   }
+  // optionally rescrape
+  const rescrape = body.rescrape || false
   // try finding existing result first
   const existingResult = await getResult(body.url)
-  if (existingResult) {
+  if (!rescrape && existingResult) {
     ctx.body = existingResult
     return
   }

@@ -23,7 +23,7 @@ export async function createIndex() {
 }
 
 export async function getResult(lookup: string) {
-  const doc = await sceneCollection.findOne({ $or: [{ jobId: lookup }, { url: lookup }] });
+  const doc = await sceneCollection.find({ $or: [{ jobId: lookup }, { url: lookup }] }).sort({ timestamp: -1 }).limit(1).next();
   return doc ? doc : null;
 }
 
