@@ -41,23 +41,11 @@ router.post("/api/update", validateApiKey, async (ctx) => {
   ctx.body = 'Scrapers updated successfully'
 })
 
-router.get("/api/result/:type/{*lookup}", async (ctx) => {
+router.get("/api/result/{*lookup}", async (ctx) => {
   const lookup = ctx.params.lookup
   if (!lookup) {
     ctx.status = 400
     ctx.body = 'Job ID/ URL is required'
-    return
-  }
-  const type = ctx.params.type as string
-  if (!type) {
-    ctx.status = 400
-    ctx.body = 'Scrape type is required'
-    return
-  }
-  // validate type
-  if (type !== 'scene') {
-    ctx.status = 400
-    ctx.body = `Invalid scrape type. Valid types are: scene`
     return
   }
   const result = await getResult(lookup)

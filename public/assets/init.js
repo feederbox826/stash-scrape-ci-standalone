@@ -5,7 +5,7 @@ if (!id) {
   console.error("No ID provided in the URL. Opening upload page.")
   window.open("/upload", "_self")
 }
-fetch(`/api/result/${type}/${id}`)
+fetch(`/api/result/${id}`)
   .then(response => response.json())
   .then(data => {
     // check if type matches data type
