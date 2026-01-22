@@ -1,8 +1,8 @@
 import { getLastScraperUpdate, setLastScraperUpdate } from "./db"
-import { ScrapeTypeTypings } from "./utils"
 import { scraperSearch } from "./scraper-index"
 import { installedPackage, logEntry } from "../types/stashapp"
 import axios from "axios"
+import { sceneResult, cleanSceneResult, stashInfo, partialJobResult } from "../types/jobResult"
 
 export class StashApp {
   private STASH_URL: string
@@ -12,7 +12,7 @@ export class StashApp {
     this.STASH_API_KEY = process.env.STASH_API_KEY
   }
 
-  callGQL = (query: String, variables = {}) =>
+  callGQL = (query: string, variables = {}) =>
     axios.post(this.STASH_URL, {
       query, variables
     }, {
@@ -26,18 +26,18 @@ export class StashApp {
         return res.data.data
       })
   
-  getStashInfo = async () => this.callGQL(`
+  getStashInfo = async (): Promise<stashInfo> => this.callGQL(`
     query { version {
       version hash
     }}`)
 
   // get scraper version info
-  getPkgVersion = async (id: string) => this.callGQL(`query {
+  getPkgVersion = async (id: string): Promise<string | undefined> => this.callGQL(`query {
     installedPackages(type: Scraper) {
       package_id version
     }}`).then(data => {
       const pkg = data.installedPackages.find((pkg: installedPackage) => pkg.package_id === id)
-      return pkg ? pkg.version : null
+      return pkg?.version
     })
 
   checkUpdatePackages = async (force = false) => {
@@ -48,9 +48,8 @@ export class StashApp {
       await this.updateScrapers()
         .then(jobId => this.awaitJobFinished(jobId))
       // update user agent
-      const userAgent = await getChromeUA()
-      console.log(`Updating scraper user-agent to: ${userAgent}`)
-      await this.updateUA(userAgent)
+      getChromeUA()
+        .then(userAgent => this.updateUA(userAgent))
       console.log("Scrapers updated")
       // reload scrapers
       await this.callGQL(`mutation { reloadScrapers }`)
@@ -61,17 +60,17 @@ export class StashApp {
     }
   }
 
-  getJobStatus = async (jobId: Number) =>
+  getJobStatus = async (jobId: Number): Promise<"FINISHED" | "FAILED" | "RUNNING" | "PENDING"> =>
     this.callGQL(`query ($id: ID!) {
       findJob(input: { id: $id }) {
         status
       }}`, { id: jobId })
+      .then(data => data?.findJob.status)
 
   awaitJobFinished = async (jobId: Number) =>
     new Promise((resolve, reject) => {
       const interval = setInterval(async () => {
         const status = await this.getJobStatus(jobId)
-          .then(data => data.findJob?.status)
         if (status === 'FINISHED') {
           clearInterval(interval)
           resolve(true)
@@ -82,58 +81,46 @@ export class StashApp {
       }, 100)
     })
 
-  updateScrapers = async () =>
+  updateScrapers = async (): Promise<number> =>
     this.callGQL('mutation { updatePackages(type: Scraper) }')
       .then(data => data.updatePackages)
-  
-  getExistingScrapers = async () => this.callGQL(`query {
+
+  getExistingScrapers = async (): Promise<string[]> => this.callGQL(`query {
       installedPackages(type: Scraper) { package_id }
     }`).then(data => data.installedPackages.map((pkg: installedPackage) => pkg.package_id))
-  
-  installPackage = (id: String) => this.callGQL(`mutation ($id: String!) {
+
+  installPackage = (id: String): Promise<number> => this.callGQL(`mutation ($id: String!) {
     installPackages(
       packages: {
         id: $id,
         sourceURL: "https://stashapp.github.io/CommunityScrapers/stable/index.yml"
       } type: Scraper
     )}`, { id })
+    .then(data => data.installPackages)
 
   // get log cache (30 items)
   // https://github.com/stashapp/stash/blob/12c4e1f61c49cd4e625a62e9bde7df9e02c0c47c/internal/log/logger.go#L113
-  getLogs = async (startTime: Date) => this.callGQL(`{ logs { time level message } }`)
+  getLogs = async (startTime: Date): Promise<logEntry[]> => this.callGQL(`{ logs { time level message } }`)
     .then(data => data.logs.reverse()) // reverse to get latest first
-    .then(logs => logs.filter((log: logEntry) => new Date(log.time).getTime() >= startTime.getTime() - 2000)) // filter logs after start time
+    .then((logs: logEntry[]) => logs.filter(log => new Date(log.time).getTime() >= startTime.getTime() - 2000)) // filter logs after start time
 
-  updateUA = async (userAgent: String) => this.callGQL(`mutation ($userAgent: String!) {
+  updateUA = async (userAgent: String): Promise<void> => this.callGQL(`mutation ($userAgent: String!) {
     configureScraping(input: { scraperUserAgent: $userAgent })
     { scraperUserAgent }}`, { userAgent })
 
-  migrateDatabase = async () => this.callGQL(`mutation {
+  migrateDatabase = async (): Promise<void> => this.callGQL(`mutation {
     migrate(input: { backupPath: "/dev/null" })
   }`)
 
-  scrape(url: string, scrapeType: ScrapeTypeTypings) {
-    const queryMap = new Map([
-      ['performer', performerQuery],
-      ['scene', sceneQuery],
-      ['gallery', galleryQuery],
-      ['image', imageQuery],
-      ['group', groupQuery],
-    ])
-    // catch unknown scrape type
-    if (!queryMap.has(scrapeType)) {
-      throw new Error(`Unknown scrape type: ${scrapeType}`)
-    }
-    const queryString = queryMap.get(scrapeType) as string
-    return this.callGQL(queryString, { url })
-      .then(data => cleanScrapeResult(data[Object.keys(data)[0]]))
-  }
+  scrape = (url: string): Promise<cleanSceneResult> =>
+    this.callGQL(sceneQuery, { url })
+      .then(data => cleanScrapeResult(data.scrapeSceneURL))
 
-  async startScrape(url: string, scrapeType: ScrapeTypeTypings) {
+  async startScrape(url: string): Promise<partialJobResult> {
     const stashInfo = await this.getStashInfo()
     let error, result
     try {
-      result = await this.scrape(url, scrapeType)
+      result = await this.scrape(url)
     } catch (err: unknown) {
       error = (err as Error).message
       console.error(`Error during scrape: ${(err as Error).message}`)
@@ -143,7 +130,7 @@ export class StashApp {
       error,
       runnerInfo: {
         url,
-        scrapeType,
+        scrapeType: "scene",
         date: new Date().toISOString(),
       },
       stashInfo
@@ -154,8 +141,8 @@ export class StashApp {
 }
 
 // generic helpers
-function cleanScrapeResult(result: Record<string, any>) {
-  const cleaned: Record<string, any> = {}
+function cleanScrapeResult(result: sceneResult): cleanSceneResult {
+  const cleaned: Record<string, string | null | string[]> = {}
   for (const [key, value] of Object.entries(result)) {
     if (value == null) cleaned[key] = null
     else if (typeof value == 'string') cleaned[key] = value
@@ -174,31 +161,16 @@ function cleanScrapeResult(result: Record<string, any>) {
       cleaned[key] = value.name
     }
   }
-  return cleaned
+  return cleaned as unknown as cleanSceneResult
 }
 
 // get chrome useragent
-const getChromeUA = () =>
+const getChromeUA = (): Promise<string> =>
   axios.get("https://jnrbsn.github.io/user-agents/user-agents.json")
     .then(res => res.data)
     .then(userAgents => userAgents[3])
 
 // static query definitions
-const performerQuery = `query ($url: String!) {
-  scrapePerformerURL(url: $url) {
-    name aliases gender
-    details
-    birthdate career_length death_date
-    height measurements weight
-    hair_color eye_color
-    country ethnicity
-    circumcised penis_length
-    fake_tits
-    piercings tattoos
-    urls 
-    tags { name }
-  }}`
-
 const sceneQuery = `query ($url: String!) {
   scrapeSceneURL(url: $url) {
     title
@@ -211,32 +183,4 @@ const sceneQuery = `query ($url: String!) {
     performers { name } studio { name }
     groups { name } movies { name }
     tags { name } 
-  }}`
-
-const galleryQuery = `query ($url: String!) {
-  scrapeGalleryURL(url: $url) {
-    title date code
-    photographer urls
-    details
-    studio { name }
-    performers { name }
-    tags { name }
-  }}`
-
-const imageQuery = `query ($url: String!) {
-  scrapeImageURL(url: $url) {
-    title date code
-    photographer urls
-    details
-    studio { name }
-    performers { name }
-    tags { name }
-  }}`
-
-const groupQuery = `query ($url: String!) {
-  scrapeGroupURL(url: $url) {
-    name aliases
-    date duration director
-    rating urls synopsis
-    studio { name } tags { name }
   }}`

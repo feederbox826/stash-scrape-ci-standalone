@@ -1,7 +1,7 @@
 // imports 
 import { connect, createIndex, addResult, getResult, getTagMappings } from "./db"
 import { StashApp } from "./stash-app"
-import { genID, helpText, ScrapeTypeArr, ScrapeTypeTypings } from "./utils"
+import { genID, helpText } from "./utils"
 import { createTagMappings } from "./populate_tags"
 import 'dotenv/config'
 
@@ -12,8 +12,8 @@ import bodyParser from "@koa/bodyparser";
 import serve from 'koa-static';
 
 import Router from '@koa/router';
+import { cleanSceneResult, jobResult } from "../types/jobResult"
 const router = new Router();
-
 
 // apikey validatorv
 const validateApiKey = (ctx: Koa.Context, next: Koa.Next) => {
@@ -55,12 +55,12 @@ router.get("/api/result/:type/{*lookup}", async (ctx) => {
     return
   }
   // validate type
-  if (!ScrapeTypeArr.includes(type)) {
+  if (type !== 'scene') {
     ctx.status = 400
-    ctx.body = `Invalid scrape type. Valid types are: ${ScrapeTypeArr.join(', ')}`
+    ctx.body = `Invalid scrape type. Valid types are: scene`
     return
   }
-  const result = await getResult(type as ScrapeTypeTypings, lookup)
+  const result = await getResult(lookup)
   if (!result) {
     ctx.status = 404
     ctx.body = 'Job result not found'
@@ -76,13 +76,13 @@ router.post("/api/scrape", validateApiKey, async (ctx) => {
     ctx.body = 'Missing required fields: url, scrapeType'
     return
   }
-  if (!ScrapeTypeArr.includes(body.scrapeType)) {
+  if (body.scrapeType !== 'scene') {
     ctx.status = 400
-    ctx.body = `Invalid scrapeType. Valid types are: ${ScrapeTypeArr.join(', ')}`
+    ctx.body = `Invalid scrapeType. Valid types are: scene`
     return
   }
   // try finding existing result first
-  const existingResult = await getResult(body.scrapeType as ScrapeTypeTypings, body.url)
+  const existingResult = await getResult(body.url)
   if (existingResult) {
     ctx.body = existingResult
     return
@@ -90,7 +90,7 @@ router.post("/api/scrape", validateApiKey, async (ctx) => {
   // set up stash instance
   const stash = new StashApp()
   const searchResult = await stash.urlSeachScrapers(body.url)
-  if (searchResult && "error" in searchResult) {
+  if ("error" in searchResult) {
     ctx.status = 400
     ctx.body = searchResult
     return
@@ -100,30 +100,36 @@ router.post("/api/scrape", validateApiKey, async (ctx) => {
   await stash.checkUpdatePackages()
   // set start time
   const startTime = new Date()
-  const result = await stash.startScrape(body.url, body.scrapeType as ScrapeTypeTypings)
+  const result = await stash.startScrape(body.url)
+  // if error, return
+  if (result.error) {
+    ctx.status = 500
+    ctx.body = result
+    return
+  }
   // get logs
   const logs = await stash.getLogs(startTime)
   // replace tags with parsed tags
-  const parsedTags = await getTagMappings(result.result?.tags || [])
+  const parsedTags = await getTagMappings(result.result?.tags ?? [])
   // get package versions
-  const packageVersions = await stash.getPkgVersion(searchResult?.id || "")
-  const cachedResult = {
+  const scraperVersion = await stash.getPkgVersion(searchResult?.id)
+  const cachedResult: jobResult = {
     jobId,
     ...result,
     result: {
-      ...result.result,
+      ...result.result as cleanSceneResult,
       tags: parsedTags,
     },
     runnerInfo: {
-      scraperId: searchResult?.id ?? null,
-      scraperVersion: packageVersions || null,
+      scraperId: searchResult?.id,
+      scraperVersion,
       ...result.runnerInfo
     },
     stashInfo: result.stashInfo,
     logs,
   }
   // insert
-  addResult(body.scrapeType as ScrapeTypeTypings, cachedResult, body.url)
+  addResult(cachedResult, body.url)
   ctx.body = cachedResult
 })
 

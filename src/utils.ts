@@ -19,19 +19,13 @@ export const helpText = `
 scrape-ci-standalone
   / - here
   /api/result/:id - retrieve job result
-  /api/result/:type/:url - retrieve latest job result for URL with type
   /api/scrape - run a scrape job
     auth - authorization for the request
     url - the URL to scrape
-    scrapeType - the type of scrape (e.g., performer, scene, gallery, image, group)
-  /api/update - force update scrapersv
+  /api/update - force update scrapers
 
-  /submit - submit a new scrape job
+  /upload - submit a new scrape job
   /scene?id=:id - view scene result
-  /performer?id=:id - view performer result
-  /gallery?id=:id - view gallery result
-  /image?id=:id - view image result
-  /group?id=:id - view group result
 `
 
 export type JobID = `v0-${string}`

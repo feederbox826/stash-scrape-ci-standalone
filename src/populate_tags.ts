@@ -11,9 +11,20 @@ const stashdb = axios.create({
   }
 });
 
-// get all tags, aliases and stashids for mappings
+type StashBoxTag = {
+  id: string;
+  name: string;
+  aliases: string[];
+}
 
-export const getTags = (page = 1) => stashdb.post("", {
+export type dbTag = {
+  id: string;
+  name: string;
+  lookup: string[];
+}
+
+// get all tags, aliases and stashids for mappings
+export const getTags = (page = 1): Promise<StashBoxTag[]> => stashdb.post("", {
   query: `
    query ($page: Int!) { queryTags(input: { page: $page, per_page: 100 }) {
     tags {
@@ -25,7 +36,7 @@ export const getTags = (page = 1) => stashdb.post("", {
 }).then(res => res.data.data.queryTags.tags);
 
 const getAllTags = async() => {
-  let allTags: {id: string, name: string, aliases: string[]}[] = []
+  let allTags: StashBoxTag[] = []
   let page = 1
   while (true) {
     const tags = await getTags(page)
@@ -45,7 +56,7 @@ export const createTagMappings = async () => {
     return
   }
   const allTags = await getAllTags()
-  const tagMappings: {id: string, name: string, lookup: string[]}[] = []
+  const tagMappings: dbTag[] = []
   for (const tag of allTags) {
     tagMappings.push({
       id: tag.id,

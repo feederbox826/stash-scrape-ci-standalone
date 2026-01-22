@@ -1,10 +1,10 @@
 // import types from scraper index
-import { scraperExport } from "../types/scraper"
+import { scraperExport } from "../types/scraperIndex"
 import axios from "axios"
 import { StashApp } from "./stash-app"
 
 // scraper index searcher and installer
-async function searchScrapers(url: string) {
+async function searchScrapers(url: string): Promise<string[]> {
   // fetch communityScrapers
   const communityScrapers = await axios.get("https://stashapp.github.io/CommunityScrapers/assets/scrapers.json")
     .then(res => res.data as scraperExport[])
@@ -17,7 +17,7 @@ async function searchScrapers(url: string) {
 }
 
 // handle url scrapersearch
-export async function scraperSearch(url: string, stash: StashApp) {
+export async function scraperSearch(url: string, stash: StashApp): Promise< { error: string } | { success: string, id: string } > {
   // search in CommunityScrapers
   const matchedScrapers = await searchScrapers(url)
   // if no results, return empty array
@@ -31,7 +31,6 @@ export async function scraperSearch(url: string, stash: StashApp) {
     const scraperId = matchedScrapers[0]
     console.log(`Installing scraper: ${scraperId}`)
     return stash.installPackage(scraperId)
-      .then(data => data.installPackages)
       .then((jobId: number) => stash.awaitJobFinished(jobId))
       .then(() => ({
         success: `Scraper ${scraperId} installed successfully.`,
@@ -46,5 +45,8 @@ export async function scraperSearch(url: string, stash: StashApp) {
       success: `Scraper ${hasExistingScrapers[0]} already installed.`,
       id: hasExistingScrapers[0]
     }
+  } else {
+    // multiple existing scrapers, return error
+    return { "error": "Unknown error when searching for scrapers" }
   }
 }
