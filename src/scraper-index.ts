@@ -46,7 +46,9 @@ export async function scraperSearch(url: string, stash: StashApp): Promise< { er
       id: hasExistingScrapers[0]
     }
   } else {
-    // multiple existing scrapers, return error
-    return { "error": "Unknown error when searching for scrapers" }
+    return {
+      success: "Multiple scrapers already installed",
+      id: hasExistingScrapers[1]
+    }
   }
 }
