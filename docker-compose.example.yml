@@ -15,10 +15,10 @@ x-tmpfs: &tmpfs
     size: 10485760 # 10M
 
 services:
-  stash_scrape:
-     container_name: stash_scrape
-     image: ghcr.io/feederbox826/stash-s6:develop
+  stash:
      << : *user-defaults
+     container_name: stash
+     image: ghcr.io/feederbox826/stash-s6:develop
      environment:
        - HTTP_PROXY="http://gluetun:8888"
      volumes:
@@ -26,23 +26,32 @@ services:
        - /home/stash/app/stash/config:/config:rw
        - << : *tmpfs
   mongodb:
+    << : *user-defaults
     container_name: mongodb
     image: mongo:8
-    << : *user-defaults
     volumes:
       - /home/stash/app/mongodb:/data/db:rw
       - << : *tmpfs
+    ports:
+      - 127.0.0.1:27017:27017
   gluetun:
+    container_name: gluetun
     image: qmcgaw/gluetun
+    restart: unless-stopped
     cap_add:
       - NET_ADMIN
     devices:
       - /dev/net/tun:/dev/net/tun
     env_file: "gluetun.env"
-  caddy:
-    image: caddy:2
-    container_name: caddy
+  cdp:
     << : *user-defaults
+    container_name: cdp
+    image: docker.io/chromedp/headless-shell:latest
+    network_mode: "service:gluetun"
+  caddy:
+    << : *user-defaults
+    container_name: caddy
+    image: caddy:2
     ports:
       - "80:80"
       - "443:443"
@@ -51,6 +60,7 @@ services:
       - /home/stash/app/caddy/config:/config:rw
       - /home/stash/app/caddy/caddy:/etc/caddy:ro
   scrape_ci:
+    << : *user-defaults
     container_name: scrape_ci
     image: ghcr.io/feederbox826/scrape-ci:latest
-    << : *user-defaults
+    env_file: "scrape_ci.env"
