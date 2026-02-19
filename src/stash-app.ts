@@ -3,6 +3,7 @@ import { scraperSearch } from "./scraper-index"
 import { installedPackage, logEntry } from "../types/stashapp"
 import axios from "axios"
 import { sceneResult, cleanSceneResult, stashInfo, partialJobResult } from "../types/jobResult"
+import crypto from "crypto"
 
 export class StashApp {
   private STASH_URL: string
@@ -109,7 +110,7 @@ export class StashApp {
     { scraperUserAgent }}`, { userAgent })
 
   migrateDatabase = async (): Promise<void> => this.callGQL(`mutation {
-    migrate(input: { backupPath: "/dev/null" })
+    migrate(input: { backupPath: "/config/${crypto.randomBytes(16).toString("hex")}-migration.sqlite" })
   }`)
 
   scrape = (url: string): Promise<cleanSceneResult> =>
