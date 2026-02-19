@@ -17,7 +17,8 @@ const router = new Router();
 
 // apikey validatorv
 const validateApiKey = (ctx: Koa.Context, next: Koa.Next) => {
-  const apiKey = ctx.request.body?.auth || ctx.query.auth || ctx.headers['x-api-key']
+  // missing definition patches
+  const apiKey = (ctx.request as any).body?.auth || ctx.query.auth || ctx.headers['x-api-key']
   if (apiKey !== process.env.AUTH_KEY) {
     ctx.status = 401
     ctx.body = 'Unauthorized'
@@ -58,7 +59,8 @@ router.get("/api/result/{*lookup}", async (ctx) => {
 })
 
 router.post("/api/scrape", validateApiKey, async (ctx) => {
-  const body = ctx.request.body
+  // missing defn patches
+  const body = (ctx.request as any).body
   if (!body || !body.url || !body.scrapeType) {
     ctx.status = 400
     ctx.body = 'Missing required fields: url, scrapeType'

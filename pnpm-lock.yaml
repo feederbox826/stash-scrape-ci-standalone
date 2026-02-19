@@ -9,20 +9,20 @@ importers:
   .:
     dependencies:
       '@koa/bodyparser':
-        specifier: ^6.0.0
-        version: 6.0.0(koa@3.1.1)
+        specifier: ^6.1.0
+        version: 6.1.0(koa@3.1.1)
       '@koa/cors':
         specifier: ^5.0.0
         version: 5.0.0
       '@koa/router':
-        specifier: ^15.2.0
-        version: 15.2.0(koa@3.1.1)
+        specifier: ^15.3.0
+        version: 15.3.0(koa@3.1.1)
       axios:
-        specifier: ^1.13.2
-        version: 1.13.2
+        specifier: ^1.13.5
+        version: 1.13.5
       dotenv:
-        specifier: ^17.2.3
-        version: 17.2.3
+        specifier: ^17.3.1
+        version: 17.3.1
       koa:
         specifier: ^3.1.1
         version: 3.1.1
@@ -30,8 +30,8 @@ importers:
         specifier: ^5.0.0
         version: 5.0.0
       mongodb:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^7.1.0
+        version: 7.1.0
     devDependencies:
       '@types/koa':
         specifier: ^3.0.1
@@ -48,8 +48,8 @@ packages:
   '@hapi/bourne@3.0.0':
     resolution: {integrity: sha512-Waj1cwPXJDucOib4a3bAISsKJVb15MKi9IvmTI/7ssVEm6sywXGjVJDhl6/umt1pK1ZS7PacXU3A1PmFKHEZ2w==}
 
-  '@koa/bodyparser@6.0.0':
-    resolution: {integrity: sha512-CjM/tiisZHBA9iVkOOyj/ocLCNJTbpLsIUjCbVkrx5rkUOZlsFf/qSbXzAbY2SNJTMl0VtKgVen6SZdjaCfVhA==}
+  '@koa/bodyparser@6.1.0':
+    resolution: {integrity: sha512-thVG/Utbz9+dB4Nl8EBJKoaOI1DzO74dJqeDFILbAVhUq6C+4rmmrKFwxiDE63ScywOs0CHypx1IUrSRMueFTw==}
     engines: {node: '>= 18'}
     peerDependencies:
       koa: '>=2'
@@ -58,8 +58,8 @@ packages:
     resolution: {integrity: sha512-x/iUDjcS90W69PryLDIMgFyV21YLTnG9zOpPXS7Bkt2b8AsY3zZsIpOLBkYr9fBcF3HbkKaER5hOBZLfpLgYNw==}
     engines: {node: '>= 14.0.0'}
 
-  '@koa/router@15.2.0':
-    resolution: {integrity: sha512-7YUhq4W83cybfNa4E7JqJpWzoCTSvbnFltkvRaUaUX1ybFzlUoLNY1SqT8XmIAO6nGbFrev+FvJHw4mL+4WhuQ==}
+  '@koa/router@15.3.0':
+    resolution: {integrity: sha512-s87hWJjFYky2Z97u8jzah73sSHp4IZivD/2PZCuspHRvcKU69OPLoBIbKigVlBmS50yFTh9GHFfr1hDag4+wXw==}
     engines: {node: '>= 20'}
     peerDependencies:
       koa: ^2.0.0 || ^3.0.0
@@ -143,8 +143,8 @@ packages:
   asynckit@0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
 
-  axios@1.13.2:
-    resolution: {integrity: sha512-VPk9ebNqPcy5lRGuSlKx752IlDatOjT9paPlm8A7yOuW2Fbvp4X3JznJtT4f0GzGLLiWE9W8onz51SqLYwzGaA==}
+  axios@1.13.5:
+    resolution: {integrity: sha512-cz4ur7Vb0xS4/KUN0tPWe44eqxrIu31me+fbang3ijiNscE129POzipJJA6zniq2C/Z6sJCjMimjS8Lc/GAs8Q==}
 
   bson@7.1.1:
     resolution: {integrity: sha512-TtJgBB+QyOlWjrbM+8bRgH84VM/xrDjyBFgSgGrfZF4xvt6gbEDtcswm27Tn9F9TWsjQybxT8b8VpCP/oJK4Dw==}
@@ -221,8 +221,8 @@ packages:
     resolution: {integrity: sha512-2sJGJTaXIIaR1w4iJSNoN0hnMY7Gpc/n8D4qSCJw8QqFWXf7cuAgnEHxBpweaVcPevC2l3KpjYCx3NypQQgaJg==}
     engines: {node: '>= 0.8', npm: 1.2.8000 || >= 1.4.16}
 
-  dotenv@17.2.3:
-    resolution: {integrity: sha512-JVUnt+DUIzu87TABbhPmNfVdBDt18BLOWjMUFJMSi/Qqg7NTYtabbvSNJGOJ7afbRuv9D/lngizHtP7QyLQ+9w==}
+  dotenv@17.3.1:
+    resolution: {integrity: sha512-IO8C/dzEb6O3F9/twg6ZLXz164a2fhTnEWb95H23Dm4OuN+92NmEAlTrupP9VW6Jm3sO26tQlqyvyi4CsnY9GA==}
     engines: {node: '>=12'}
 
   dunder-proto@1.0.1:
@@ -387,8 +387,8 @@ packages:
     resolution: {integrity: sha512-irhhjRVLE20hbkRl4zpAYLnDMM+zIZnp0IDB9akAFFUZp/3XdOfwwddc7y6cNvF2WCEtfTYRwYbIfYa2kVY0og==}
     engines: {node: '>=20.19.0'}
 
-  mongodb@7.0.0:
-    resolution: {integrity: sha512-vG/A5cQrvGGvZm2mTnCSz1LUcbOPl83hfB6bxULKQ8oFZauyox/2xbZOoGNl+64m8VBrETkdGCDBdOsCr3F3jg==}
+  mongodb@7.1.0:
+    resolution: {integrity: sha512-kMfnKunbolQYwCIyrkxNJFB4Ypy91pYqua5NargS/f8ODNSJxT03ZU3n1JqL4mCzbSih8tvmMEMLpKTT7x5gCg==}
     engines: {node: '>=20.19.0'}
     peerDependencies:
       '@aws-sdk/credential-providers': ^3.806.0
@@ -541,7 +541,7 @@ snapshots:
 
   '@hapi/bourne@3.0.0': {}
 
-  '@koa/bodyparser@6.0.0(koa@3.1.1)':
+  '@koa/bodyparser@6.1.0(koa@3.1.1)':
     dependencies:
       '@types/co-body': 6.1.3
       co-body: 6.2.0
@@ -553,7 +553,7 @@ snapshots:
     dependencies:
       vary: 1.1.2
 
-  '@koa/router@15.2.0(koa@3.1.1)':
+  '@koa/router@15.3.0(koa@3.1.1)':
     dependencies:
       debug: 4.4.3
       http-errors: 2.0.1
@@ -671,7 +671,7 @@ snapshots:
 
   asynckit@0.4.0: {}
 
-  axios@1.13.2:
+  axios@1.13.5:
     dependencies:
       follow-redirects: 1.15.11
       form-data: 4.0.5
@@ -736,7 +736,7 @@ snapshots:
 
   destroy@1.2.0: {}
 
-  dotenv@17.2.3: {}
+  dotenv@17.3.1: {}
 
   dunder-proto@1.0.1:
     dependencies:
@@ -916,7 +916,7 @@ snapshots:
       '@types/whatwg-url': 13.0.0
       whatwg-url: 14.2.0
 
-  mongodb@7.0.0:
+  mongodb@7.1.0:
     dependencies:
       '@mongodb-js/saslprep': 1.4.5
       bson: 7.1.1
