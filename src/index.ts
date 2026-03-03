@@ -98,71 +98,34 @@ router.get("/api/result/{*lookup}", async (ctx) => {
   ctx.body = result
 })
 
+router.get("/api/scrape/{type}/{*url}", koaValidate, async (ctx) => {
+  const url = ctx.params.url
+  if (!url) {
+    ctx.status = 400
+    ctx.body = 'URL is required'
+    return
+  }
+  const { status, body } = await getScrapeResult(ctx.params.type, url)
+  ctx.status = status
+  ctx.body = body
+})
+
 router.post("/api/scrape", koaValidate, async (ctx) => {
   // missing defn patches
-  const body = (ctx.request as any).body
-  if (!body || !body.url || !body.scrapeType) {
+  const bodyJSON = (ctx.request as any).body
+  if (!bodyJSON || !bodyJSON.url || !bodyJSON.scrapeType) {
     ctx.status = 400
     ctx.body = 'Missing required fields: url, scrapeType'
     return
   }
-  if (body.scrapeType !== 'scene') {
+  if (bodyJSON.scrapeType !== 'scene') {
     ctx.status = 400
     ctx.body = `Invalid scrapeType. Valid types are: scene`
     return
   }
-  // optionally rescrape
-  const rescrape = body.rescrape || false
-  // try finding existing result first
-  const existingResult = await getResult(body.url)
-  if (!rescrape && existingResult) {
-    ctx.body = existingResult
-    return
-  }
-  // set up stash instance
-  const stash = new StashApp()
-  const searchResult = await stash.urlSeachScrapers(body.url)
-  if ("error" in searchResult) {
-    ctx.status = 400
-    ctx.body = searchResult
-    return
-  }
-  const jobId = genID()
-  // check update packages
-  await stash.checkUpdatePackages()
-  // set start time
-  const startTime = new Date()
-  const result = await stash.startScrape(body.url)
-  // if error, return
-  if (result.error) {
-    ctx.status = 500
-    ctx.body = result
-    return
-  }
-  // get logs
-  const logs = await stash.getLogs(startTime)
-  // replace tags with parsed tags
-  const parsedTags = await getTagMappings(result.result?.tags ?? [])
-  // get package versions
-  const scraperVersion = await stash.getPkgVersion(searchResult?.id)
-  const cachedResult: jobResult = {
-    jobId,
-    ...result,
-    result: {
-      ...result.result as cleanSceneResult,
-      tags: parsedTags,
-    },
-    runnerInfo: {
-      scraperId: searchResult?.id,
-      scraperVersion,
-      ...result.runnerInfo
-    },
-    stashInfo: result.stashInfo,
-    logs,
-  }
-  // insert
-  addResult(cachedResult, body.url)
-  ctx.body = cachedResult
+  const { status, body } = await getScrapeResult(bodyJSON.scrapeType, bodyJSON.url, bodyJSON.rescrape)
+  ctx.status = status
+  ctx.body = body
 })
 
 app.use(cors({
@@ -191,3 +154,56 @@ app.listen(process.env.PORT || 3000, () => {
 process.on('SIGINT', function() {
   process.exit()
 });
+
+// helper to get scrape results
+const getScrapeResult = async (type: string, url: string, rescrape = false): Promise<{ status: number, body: string }> => {
+  // only support scenes for now
+  if (type !== 'scene') {
+    return { status: 400, body: JSON.stringify({ error: 'Invalid scrapeType. Valid types are: scene' }) }
+  }
+  // try finding existing result first
+  const existingResult = await getResult(url)
+  if (!rescrape && existingResult) {
+    return { status: 200, body: JSON.stringify(existingResult) }
+  }
+  // set up stash instance
+  const stash = new StashApp()
+  const searchResult = await stash.urlSeachScrapers(url)
+  if ("error" in searchResult) {
+    return { status: 400, body: JSON.stringify(searchResult) }
+  }
+  const jobId = genID()
+  // check update packages
+  await stash.checkUpdatePackages()
+  // set start time
+  const startTime = new Date()
+  const result = await stash.startScrape(url)
+  // if error, return
+  if (result.error) {
+    return { status: 500, body: JSON.stringify(result) }
+  }
+  // get logs
+  const logs = await stash.getLogs(startTime)
+  // replace tags with parsed tags
+  const parsedTags = await getTagMappings(result.result?.tags ?? [])
+  // get package versions
+  const scraperVersion = await stash.getPkgVersion(searchResult?.id)
+  const cachedResult: jobResult = {
+    jobId,
+    ...result,
+    result: {
+      ...result.result as cleanSceneResult,
+      tags: parsedTags,
+    },
+    runnerInfo: {
+      scraperId: searchResult?.id,
+      scraperVersion,
+      ...result.runnerInfo
+    },
+    stashInfo: result.stashInfo,
+    logs,
+  }
+  // insert
+  addResult(cachedResult, url)
+  return { status: 200, body: JSON.stringify(cachedResult) }
+}
