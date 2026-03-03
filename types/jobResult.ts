@@ -1,4 +1,4 @@
-import { logEntry } from "./stashapp";
+import { logEntry } from "./stashapp.js";
 
 export interface partialJobResult {
   result?: cleanSceneResult;
