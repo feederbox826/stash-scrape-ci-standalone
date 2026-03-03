@@ -45,7 +45,7 @@ export async function addResult(cachedResult: any, url: string) {
 
 // config
 // stores scraperLastUpdate timestamp
-const configCollection = db.collection("config");
+export const configCollection = db.collection("config");
 export const getLastScraperUpdate = async (): Promise<boolean> => {
   const doc = await configCollection.findOne({ key: "scraperLastUpdate" });
   // time greater than 24 hours ago

@@ -14,6 +14,7 @@ import serve from 'koa-static';
 
 import Router from '@koa/router';
 import { cleanSceneResult, jobResult } from "../types/jobResult.js"
+import { uploadImage } from "./b2.js"
 const router = new Router();
 
 // apikey validatorv
@@ -188,6 +189,9 @@ const getScrapeResult = async (type: string, url: string, rescrape = false): Pro
   const parsedTags = await getTagMappings(result.result?.tags ?? [])
   // get package versions
   const scraperVersion = await stash.getPkgVersion(searchResult?.id)
+  // replace image with CDN url
+  const imageURL = await uploadImage(result.result?.image ?? "", jobId)
+  if (imageURL) result.result!.image = imageURL
   const cachedResult: jobResult = {
     jobId,
     ...result,

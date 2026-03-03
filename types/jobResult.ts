@@ -53,6 +53,7 @@ export interface cleanSceneResult {
   director: string | null;
   duration: string | null;
   details: string | null;
+  image: string | null;
   urls: string[] | null;
   performers: string[] | null;
   studio: string | null;
