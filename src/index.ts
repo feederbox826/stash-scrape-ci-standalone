@@ -98,7 +98,7 @@ router.get("/api/result/{*lookup}", async (ctx) => {
   ctx.body = result
 })
 
-router.get("/api/scrape/{type}/{*url}", koaValidate, async (ctx) => {
+router.get("/api/scrape/:type/{*url}", koaValidate, async (ctx) => {
   const url = ctx.params.url
   if (!url) {
     ctx.status = 400
