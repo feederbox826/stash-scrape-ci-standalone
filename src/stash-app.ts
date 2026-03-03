@@ -1,8 +1,8 @@
-import { getLastScraperUpdate, setLastScraperUpdate } from "./db"
-import { scraperSearch } from "./scraper-index"
-import { installedPackage, logEntry } from "../types/stashapp"
+import { getLastScraperUpdate, setLastScraperUpdate } from "./db.js"
+import { scraperSearch } from "./scraper-index.js"
+import { installedPackage, logEntry } from "../types/stashapp.js"
 import axios from "axios"
-import { sceneResult, cleanSceneResult, stashInfo, partialJobResult } from "../types/jobResult"
+import { sceneResult, cleanSceneResult, stashInfo, partialJobResult } from "../types/jobResult.js"
 import crypto from "crypto"
 
 export class StashApp {

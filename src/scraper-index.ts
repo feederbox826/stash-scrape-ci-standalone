@@ -1,7 +1,7 @@
 // import types from scraper index
-import { scraperExport } from "../types/scraperIndex"
+import { scraperExport } from "../types/scraperIndex.js"
 import axios from "axios"
-import { StashApp } from "./stash-app"
+import { StashApp } from "./stash-app.js"
 
 // scraper index searcher and installer
 async function searchScrapers(url: string): Promise<string[]> {

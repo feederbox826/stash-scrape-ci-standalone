@@ -1,8 +1,9 @@
 // imports 
-import { connect, createIndex, addResult, getResult, getTagMappings } from "./db"
-import { StashApp } from "./stash-app"
-import { genID, helpText } from "./utils"
-import { createTagMappings } from "./populate_tags"
+import { connect, createIndex, addResult, getResult, getTagMappings, createApiKey, revokeApiKey } from "./db.js"
+import { StashApp } from "./stash-app.js"
+import { genID, helpText } from "./utils.js"
+import { createTagMappings } from "./populate_tags.js"
+import { keyStatus, checkKeyLimit } from "./apikey.js"
 import 'dotenv/config'
 
 import Koa from "koa"
@@ -12,14 +13,29 @@ import bodyParser from "@koa/bodyparser";
 import serve from 'koa-static';
 
 import Router from '@koa/router';
-import { cleanSceneResult, jobResult } from "../types/jobResult"
+import { cleanSceneResult, jobResult } from "../types/jobResult.js"
 const router = new Router();
 
 // apikey validatorv
-const validateApiKey = (ctx: Koa.Context, next: Koa.Next) => {
+const koaValidate = async (ctx: Koa.Context, next: Koa.Next) => {
   // missing definition patches
   const apiKey = (ctx.request as any).body?.auth || ctx.query.auth || ctx.headers['x-api-key']
-  if (apiKey !== process.env.AUTH_KEY) {
+  const apikeyResponse = await checkKeyLimit(apiKey)
+  if (apikeyResponse === keyStatus.invalid) {
+    ctx.status = 401
+    ctx.body = 'Unauthorized'
+    return
+  } else if (apikeyResponse === keyStatus.exhausted) {
+    ctx.status = 429
+    ctx.body = 'API key rate limit exceeded'
+    return
+  }
+  return next()
+}
+
+const koaValidateAdmin = async (ctx: Koa.Context, next: Koa.Next) => {
+  const apikey = (ctx.request as any).body?.auth || ctx.query.auth || ctx.headers['x-api-key']
+  if (apikey !== process.env.ADMIN_KEY) {
     ctx.status = 401
     ctx.body = 'Unauthorized'
     return
@@ -35,7 +51,31 @@ router.get("/api", async (ctx) => {
   ctx.body = helpText
 })
 
-router.post("/api/update", validateApiKey, async (ctx) => {
+// admin api
+router.post("/api/admin/apikey", koaValidateAdmin, async (ctx) => {
+  const body = (ctx.request as any).body
+  if (!body || !body.note) {
+    ctx.status = 400
+    ctx.body = 'Note is required to create API key'
+    return
+  }
+  const limit = body.limit || 200
+  const apiKey = await createApiKey(body.note, limit)
+  ctx.body = { apiKey, limit }
+})
+
+router.delete("/api/admin/apikey", koaValidateAdmin, async (ctx) => {
+  const body = (ctx.request as any).body
+  if (!body || !body.key) {
+    ctx.status = 400
+    ctx.body = 'API key is required to revoke'
+    return
+  }
+  await revokeApiKey(body.key)
+  ctx.body = 'API key revoked successfully'
+})
+
+router.post("/api/update", koaValidate, async (ctx) => {
   const stash = new StashApp()
   await stash.migrateDatabase()
   await stash.checkUpdatePackages(true)
@@ -58,7 +98,7 @@ router.get("/api/result/{*lookup}", async (ctx) => {
   ctx.body = result
 })
 
-router.post("/api/scrape", validateApiKey, async (ctx) => {
+router.post("/api/scrape", koaValidate, async (ctx) => {
   // missing defn patches
   const body = (ctx.request as any).body
   if (!body || !body.url || !body.scrapeType) {

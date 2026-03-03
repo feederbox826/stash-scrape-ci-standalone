@@ -1,5 +1,6 @@
 import { MongoClient } from "mongodb";
-import { tag } from "../types/jobResult";
+import { tag } from "../types/jobResult.js";
+import { genID } from "./utils.js"
 
 const uri = process.env.MONGODB_URI || "mongodb://localhost:27017/stash-ci";
 const client = new MongoClient(uri);
@@ -7,6 +8,7 @@ const client = new MongoClient(uri);
 const db = client.db();
 const sceneCollection = db.collection("scene");
 export const tagCollection = db.collection("tags");
+const apiKeyCollection = db.collection("apiKeys");
 
 export async function connect() {
   await client.connect();
@@ -20,6 +22,8 @@ export async function createIndex() {
   await sceneCollection.createIndex({ jobId: 1 }, { unique: true });
   // tags index
   await tagCollection.createIndex({ lookup: 1 }, { unique: true });
+  // apikey
+  await apiKeyCollection.createIndex({ apikey: 1 }, { unique: true });
 }
 
 export async function getResult(lookup: string) {
@@ -70,4 +74,21 @@ export const getTagMappings = async (tags: String[]): Promise<tag[]> => {
     }
   }
   return mappings;
+}
+
+// apikey
+export const createApiKey = async (note: string, limit: number = 200): Promise<string> => {
+  const apikey = `ssci_${genID(32)}`
+  // store in db with note
+  apiKeyCollection.insertOne({ apikey, note, createdAt: new Date(), limit });
+  return apikey;
+}
+
+export const validateApiKey = async (key: string): Promise<number> => {
+  const match = await apiKeyCollection.findOne({ apikey: key });
+  return match?.limit ?? 0;
+}
+
+export const revokeApiKey = async (key: string): Promise<void> => {
+  await apiKeyCollection.deleteOne({ apikey: key });
 }

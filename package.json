@@ -2,14 +2,16 @@
 	"dependencies": {
 		"@koa/bodyparser": "^6.1.0",
 		"@koa/cors": "^5.0.0",
-		"@koa/router": "^15.3.0",
-		"axios": "^1.13.5",
+		"@koa/router": "^15.3.1",
+		"@redis/client": "^5.11.0",
+		"axios": "^1.13.6",
 		"dotenv": "^17.3.1",
-		"koa": "^3.1.1",
+		"koa": "^3.1.2",
 		"koa-static": "^5.0.0",
 		"mongodb": "^7.1.0"
 	},
-	"packageManager": "pnpm@10.30.0",
+	"type": "module",
+	"packageManager": "pnpm@10.30.3",
 	"devDependencies": {
 		"@types/koa": "^3.0.1",
 		"@types/koa-static": "^4.0.4",

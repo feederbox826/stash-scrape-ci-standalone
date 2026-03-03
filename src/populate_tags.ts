@@ -1,5 +1,5 @@
 import axios from "axios";
-import { tagCollection } from "./db";
+import { tagCollection } from "./db.js";
 import 'dotenv/config'
 
 const stashdb = axios.create({
