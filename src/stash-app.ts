@@ -181,7 +181,8 @@ const sceneQuery = `query ($url: String!) {
     duration
     details
     urls
+    image
     performers { name } studio { name }
     groups { name } movies { name }
-    tags { name } 
+    tags { name }
   }}`

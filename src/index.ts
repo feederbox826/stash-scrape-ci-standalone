@@ -1,7 +1,7 @@
 // imports 
 import { connect, createIndex, addResult, getResult, getTagMappings, createApiKey, revokeApiKey } from "./db.js"
 import { StashApp } from "./stash-app.js"
-import { genID, helpText } from "./utils.js"
+import { genJobID, helpText } from "./utils.js"
 import { createTagMappings } from "./populate_tags.js"
 import { keyStatus, checkKeyLimit } from "./apikey.js"
 import 'dotenv/config'
@@ -172,7 +172,7 @@ const getScrapeResult = async (type: string, url: string, rescrape = false): Pro
   if ("error" in searchResult) {
     return { status: 400, body: searchResult }
   }
-  const jobId = genID()
+  const jobId = genJobID()
   // check update packages
   await stash.checkUpdatePackages()
   // set start time

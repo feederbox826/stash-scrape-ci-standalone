@@ -46,10 +46,12 @@ export type JobID = `v0-${string}`
 // https://alex7kom.github.io/nano-nanoid-cc/
 // ~7 centuries for collision at 300 scrape/h
 // 4 more characters
-// prefixed with vX- for visual distinction and versioning
-export const genID = (len = 12): JobID => {
+// suffix with X for version
+export const genID = (len = 12): string => {
   const SYMBOLS = '346789ABCDEFGHJKLMNPQRTUVWXYabcdefghijkmnpqrtwxyz'
   let result = ''
   for (let i = 0; i < len; i++) result += SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)]
-  return `v0-${result}` as JobID
+  return result
 }
+
+export const genJobID = (): JobID => `${genID(12)}1` as JobID
