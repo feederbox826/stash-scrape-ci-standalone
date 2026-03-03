@@ -156,21 +156,21 @@ process.on('SIGINT', function() {
 });
 
 // helper to get scrape results
-const getScrapeResult = async (type: string, url: string, rescrape = false): Promise<{ status: number, body: string }> => {
+const getScrapeResult = async (type: string, url: string, rescrape = false): Promise<{ status: number, body: Object | string }> => {
   // only support scenes for now
   if (type !== 'scene') {
-    return { status: 400, body: JSON.stringify({ error: 'Invalid scrapeType. Valid types are: scene' }) }
+    return { status: 400, body: { error: 'Invalid scrapeType. Valid types are: scene' } }
   }
   // try finding existing result first
   const existingResult = await getResult(url)
   if (!rescrape && existingResult) {
-    return { status: 200, body: JSON.stringify(existingResult) }
+    return { status: 200, body: existingResult }
   }
   // set up stash instance
   const stash = new StashApp()
   const searchResult = await stash.urlSeachScrapers(url)
   if ("error" in searchResult) {
-    return { status: 400, body: JSON.stringify(searchResult) }
+    return { status: 400, body: searchResult }
   }
   const jobId = genID()
   // check update packages
@@ -180,7 +180,7 @@ const getScrapeResult = async (type: string, url: string, rescrape = false): Pro
   const result = await stash.startScrape(url)
   // if error, return
   if (result.error) {
-    return { status: 500, body: JSON.stringify(result) }
+    return { status: 500, body: result }
   }
   // get logs
   const logs = await stash.getLogs(startTime)
@@ -205,5 +205,5 @@ const getScrapeResult = async (type: string, url: string, rescrape = false): Pro
   }
   // insert
   addResult(cachedResult, url)
-  return { status: 200, body: JSON.stringify(cachedResult) }
+  return { status: 200, body: cachedResult }
 }
