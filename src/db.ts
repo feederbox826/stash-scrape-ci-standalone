@@ -68,9 +68,9 @@ export const getTagMappings = async (tags: String[]): Promise<tag[]> => {
   for (const tag of lowerTags) {
     const match = await tagCollection.findOne({ lookup: tag });
     if (match) {
-      mappings.push({ raw: tag, stash: [{ id: match.stashId, name: match.stashName, endpoint: "stashdb" }] });
+      mappings.push({ raw: tag, sb: [{ id: match.id, name: match.name, endpoint: "stashdb" }] });
     } else {
-      mappings.push({ raw: tag, stash: [] });
+      mappings.push({ raw: tag, sb: [] });
     }
   }
   return mappings;

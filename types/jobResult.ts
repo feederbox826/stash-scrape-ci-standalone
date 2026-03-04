@@ -16,7 +16,7 @@ export interface jobResult {
 }
 
 export type stashTag = { id: string, name: string, endpoint: string };
-export type tag = { raw: string, stash: stashTag[] };
+export type tag = { raw: string, sb: stashTag[] };
 
 export interface runnerInfo {
   scraperId?: string;
