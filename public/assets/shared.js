@@ -41,8 +41,8 @@ function replaceShared(data) {
   // add tags
   if (!data.result?.tags?.[Symbol.iterator]) return
   // seperate linked and unlinked tags
-  const linkedTags = data.result?.tags.filter(tag => tag.id)
-  const unlinkedTags = data.result?.tags.filter(tag => !tag.id)
+  const linkedTags = data.result?.tags.filter(tag => tag.sb)
+  const unlinkedTags = data.result?.tags.filter(tag => !tag.sb)
   // unlinked tags
   const unlinkedTagContainer = document.getElementById("unlinked-tag-list")
   if (unlinkedTags.length) {
@@ -52,7 +52,7 @@ function replaceShared(data) {
       const newTagSpan = document.createElement("span")
       newTagSpan.classList = "tag-item badge bg-none"
       newTagLi.appendChild(newTagSpan)
-      newTagSpan.textContent = tag.name
+      newTagSpan.textContent = tag.raw
       unlinkedTagContainer.appendChild(newTagLi)
     }
   }
@@ -65,9 +65,9 @@ function replaceShared(data) {
       const newTagSpan = document.createElement("a")
       newTagSpan.classList = "tag-item badge bg-none"
       newTagLi.appendChild(newTagSpan)
-      newTagSpan.textContent = `🔗 ${tag.name}`
+      newTagSpan.textContent = `🔗 ${tag.sb[0].name}`
       // set href and link icon
-      newTagSpan.href = `https://stashdb.org/tags/${tag.id}` // adjust base URL as needed
+      newTagSpan.href = `https://stashdb.org/tags/${tag.sb[0].id}` // adjust base URL as needed
       newTagSpan.target = "_blank"
       newTagSpan.rel = "noopener noreferrer"
       linkedTagContainer.appendChild(newTagLi)
