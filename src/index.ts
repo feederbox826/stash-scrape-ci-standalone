@@ -171,7 +171,7 @@ const getScrapeResult = async (type: string, url: string, rescrape = false): Pro
   const stash = new StashApp()
   const searchResult = await stash.urlSeachScrapers(url)
   if ("error" in searchResult) {
-    return { status: 400, body: searchResult }
+    return { status: 422, body: searchResult }
   }
   const jobId = genJobID()
   // check update packages
