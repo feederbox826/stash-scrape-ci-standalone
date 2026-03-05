@@ -21,6 +21,18 @@ function replaceShared(data) {
     errorMessage.textContent = data.error
   }
 
+  // add image
+  if (data?.result?.image) {
+    const imageContainer = document.getElementById("result-image")
+    imageContainer.dataset.src = data.result.image
+    imageContainer.classList.remove("hidden")
+    const imageParent = document.getElementById("result-image-container")
+    imageParent.onclick = () => {
+      imageContainer.src = imageContainer.dataset.src
+      document.getElementById("result-image-placeholder").remove()
+    }
+  }
+
   // add urls
   if (data?.result?.urls?.[Symbol.iterator]) {
     document.getElementById("url-placeholder").remove()

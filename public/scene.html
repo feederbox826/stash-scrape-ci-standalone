@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#000000">
   <link rel="stylesheet" href="./assets/index.css">
+  <link rel="stylesheet" href="./assets/custom.css">
 </head>
 <body>
   <nav class="px-4 navbar navbar-expand navbar-dark bg-dark">
@@ -35,11 +36,19 @@
         <h3 id="result-title">Scene Title</h3>
         <h6 id="result-studio">Studio • 0000-00-00</h6>
       </div>
+      <div class="ScenePhoto card-body" id="result-image-container">
+        <div class="Image">
+          <div id="result-image-placeholder">Click to show image</div>
+          <img id="result-image" class="hidden">
+        </div>
+      </div>
       <div class="d-flex card-footer">
         <div class="scene-performers me-auto">
           <span id="result-performers">Performers</span>
         </div>
-        <div>Studio Code: <strong id="result-code">0000</strong></div>
+        <div class="ms-3">Studio Code: <strong id="result-code">0000</strong></div>
+        <div class="ms-3">Duration: <strong id="result-duration">00:00</strong></div>
+        <div class="ms-3">Director: <strong id="result-director">Unknown</strong></div>
       </div>
     </div>
     <div id="scene-tabs-tabpane-description" class="my-4">
