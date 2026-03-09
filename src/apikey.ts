@@ -27,3 +27,8 @@ export const checkKeyLimit = async (key: string): Promise<keyStatus> => {
   }
   return keyStatus.invalid;
 }
+
+export const checkKeyValidity = async (key: string): Promise<boolean> => {
+  const limit = await getKeyLimit(key);
+  return !!limit
+}

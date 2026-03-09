@@ -3,7 +3,7 @@ import { connect, createIndex, addResult, getResult, getTagMappings, createApiKe
 import { StashApp } from "./stash-app.js"
 import { genJobID, helpText } from "./utils.js"
 import { createTagMappings } from "./populate_tags.js"
-import { keyStatus, checkKeyLimit } from "./apikey.js"
+import { keyStatus, checkKeyLimit, checkKeyValidity } from "./apikey.js"
 import 'dotenv/config'
 
 import Koa from "koa"
@@ -81,6 +81,18 @@ router.post("/api/update", koaValidate, async (ctx) => {
   await stash.migrateDatabase()
   await stash.checkUpdatePackages(true)
   ctx.body = 'Scrapers updated successfully'
+})
+
+router.get("/api/validatekey", async (ctx) => {
+  const apiKey = (ctx.request as any).body?.auth || ctx.query.auth || ctx.headers['x-api-key']
+  const apikeyResponse = await checkKeyValidity(apiKey)
+  if (apikeyResponse) {
+    ctx.status = 200
+    ctx.body = 'API key is valid'
+  } else {
+    ctx.status = 401
+    ctx.body = 'Unauthorized'
+  }
 })
 
 router.get("/api/result/{*lookup}", async (ctx) => {
