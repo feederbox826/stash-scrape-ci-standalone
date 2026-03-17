@@ -53,8 +53,8 @@ function replaceShared(data) {
   // add tags
   if (!data.result?.tags?.[Symbol.iterator]) return
   // seperate linked and unlinked tags
-  const linkedTags = data.result?.tags.filter(tag => tag.sb)
-  const unlinkedTags = data.result?.tags.filter(tag => !tag.sb)
+  const linkedTags = data.result?.tags.filter(tag => tag.sb.length)
+  const unlinkedTags = data.result?.tags.filter(tag => !tag.sb.length)
   // unlinked tags
   const unlinkedTagContainer = document.getElementById("unlinked-tag-list")
   if (unlinkedTags.length) {
