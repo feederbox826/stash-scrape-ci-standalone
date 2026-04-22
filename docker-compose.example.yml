@@ -21,6 +21,7 @@ services:
      image: ghcr.io/feederbox826/stash-s6:develop
      environment:
        - HTTP_PROXY="http://gluetun:8888"
+       - FLARESOLVERR_URL="http://byparr:8191/v1"
      volumes:
        - /home/stash/app/stash/pip:/pip-install:rw
        - /home/stash/app/stash/config:/config:rw
@@ -32,6 +33,7 @@ services:
     volumes:
       - /home/stash/app/mongodb:/data/db:rw
       - << : *tmpfs
+    command: ["mongod", "--wiredTigerCacheSizeGB", "0.25"]
     ports:
       - 127.0.0.1:27017:27017
   gluetun:
@@ -48,19 +50,22 @@ services:
     container_name: cdp
     image: docker.io/chromedp/headless-shell:latest
     network_mode: "service:gluetun"
-  caddy:
-    << : *user-defaults
-    container_name: caddy
-    image: caddy:2
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - /home/stash/app/caddy/data:/data:rw
-      - /home/stash/app/caddy/config:/config:rw
-      - /home/stash/app/caddy/caddy:/etc/caddy:ro
   scrape_ci:
     << : *user-defaults
     container_name: scrape_ci
     image: ghcr.io/feederbox826/scrape-ci:latest
     env_file: "scrape_ci.env"
+  byparr:
+    << : *user-defaults
+    container_name: byparr
+    image: ghcr.io/thephaseless/byparr:latest
+    read_only: false
+    volumes:
+      - /home/stash/app/byparr:/var/cache/uv:rw
+  valkey:
+    << : *user-defaults
+    container_name: valkey
+    image: valkey/valkey:alpine
+    volumes:
+      - /home/stash/app/valkey:/data
+    command: valkey-server --save 60 1

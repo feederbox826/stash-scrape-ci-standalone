@@ -10,41 +10,41 @@ importers:
     dependencies:
       '@koa/bodyparser':
         specifier: ^6.1.0
-        version: 6.1.0(koa@3.1.2)
+        version: 6.1.0(koa@3.2.0)
       '@koa/cors':
         specifier: ^5.0.0
         version: 5.0.0
       '@koa/router':
-        specifier: ^15.3.1
-        version: 15.3.1(koa@3.1.2)
+        specifier: ^15.4.0
+        version: 15.4.0(koa@3.2.0)
       '@redis/client':
-        specifier: ^5.11.0
-        version: 5.11.0
+        specifier: ^5.12.1
+        version: 5.12.1
       '@types/backblaze-b2':
         specifier: ^1.5.6
         version: 1.5.6
       axios:
-        specifier: ^1.13.6
-        version: 1.13.6
+        specifier: ^1.15.2
+        version: 1.15.2
       backblaze-b2:
         specifier: ^1.7.1
         version: 1.7.1
       dotenv:
-        specifier: ^17.3.1
-        version: 17.3.1
+        specifier: ^17.4.2
+        version: 17.4.2
       koa:
-        specifier: ^3.1.2
-        version: 3.1.2
+        specifier: ^3.2.0
+        version: 3.2.0
       koa-static:
         specifier: ^5.0.0
         version: 5.0.0
       mongodb:
-        specifier: ^7.1.0
-        version: 7.1.0
+        specifier: ^7.2.0
+        version: 7.2.0
     devDependencies:
       '@types/koa':
-        specifier: ^3.0.1
-        version: 3.0.1
+        specifier: ^3.0.2
+        version: 3.0.2
       '@types/koa-static':
         specifier: ^4.0.4
         version: 4.0.4
@@ -67,8 +67,8 @@ packages:
     resolution: {integrity: sha512-x/iUDjcS90W69PryLDIMgFyV21YLTnG9zOpPXS7Bkt2b8AsY3zZsIpOLBkYr9fBcF3HbkKaER5hOBZLfpLgYNw==}
     engines: {node: '>= 14.0.0'}
 
-  '@koa/router@15.3.1':
-    resolution: {integrity: sha512-n7UgxsPmgKtEsrguz8a0d6BNx3lO2x52Z4UqkGsGwJculk4TlzZf3btd3QZMq1r1M+bSxUkBbyul4mDhysIVaQ==}
+  '@koa/router@15.4.0':
+    resolution: {integrity: sha512-vKYlXtoCfcAN8z4dHiveYX55rTYOgHEYJNumK1WM9ZAwaArhreGVkyC1LTMGfUQUJyIO/SbwRFBOHeOCY8/MaQ==}
     engines: {node: '>= 20'}
     peerDependencies:
       koa: ^2.0.0 || ^3.0.0
@@ -76,13 +76,16 @@ packages:
   '@mongodb-js/saslprep@1.4.5':
     resolution: {integrity: sha512-k64Lbyb7ycCSXHSLzxVdb2xsKGPMvYZfCICXvDsI8Z65CeWQzTEKS4YmGbnqw+U9RBvLPTsB6UCmwkgsDTGWIw==}
 
-  '@redis/client@5.11.0':
-    resolution: {integrity: sha512-GHoprlNQD51Xq2Ztd94HHV94MdFZQ3CVrpA04Fz8MVoHM0B7SlbmPEVIjwTbcv58z8QyjnrOuikS0rWF03k5dQ==}
-    engines: {node: '>= 18'}
+  '@redis/client@5.12.1':
+    resolution: {integrity: sha512-7aPGWeqA3uFm43o19umzdl16CEjK/JQGtSXVPevplTaOU3VJA/rseBC1QvYUz9lLDIMBimc4SW/zrW4S89BaCA==}
+    engines: {node: '>= 18.19.0'}
     peerDependencies:
       '@node-rs/xxhash': ^1.1.0
+      '@opentelemetry/api': '>=1 <2'
     peerDependenciesMeta:
       '@node-rs/xxhash':
+        optional: true
+      '@opentelemetry/api':
         optional: true
 
   '@types/accepts@1.3.7':
@@ -130,8 +133,8 @@ packages:
   '@types/koa-static@4.0.4':
     resolution: {integrity: sha512-j1AUzzl7eJYEk9g01hNTlhmipFh8RFbOQmaMNLvLcNNAkPw0bdTs3XTa3V045XFlrWN0QYnblbDJv2RzawTn6A==}
 
-  '@types/koa@3.0.1':
-    resolution: {integrity: sha512-VkB6WJUQSe0zBpR+Q7/YIUESGp5wPHcaXr0xueU5W0EOUWtlSbblsl+Kl31lyRQ63nIILh0e/7gXjQ09JXJIHw==}
+  '@types/koa@3.0.2':
+    resolution: {integrity: sha512-7TRzVOBcH/q8CfPh9AmHBQ8TZtimT4Sn+rw8//hXveI6+F41z93W8a+0B0O8L7apKQv+vKBIEZSECiL0Oo1JFA==}
 
   '@types/koa__cors@5.0.1':
     resolution: {integrity: sha512-xZckuh3B6ycSBAIYnBImG1VDHyBNZsltGAuGb4THuZllccdLgD5DUs4RA7TAUjB58THg00SSZ1e//duQef7WRw==}
@@ -169,15 +172,15 @@ packages:
     peerDependencies:
       axios: 0.x || 1.x
 
-  axios@1.13.6:
-    resolution: {integrity: sha512-ChTCHMouEe2kn713WHbQGcuYrr6fXTBiu460OTwWrWob16g1bXn4vtz07Ope7ewMozJAnEquLk5lWQWtBig9DQ==}
+  axios@1.15.2:
+    resolution: {integrity: sha512-wLrXxPtcrPTsNlJmKjkPnNPK2Ihe0hn0wGSaTEiHRPxwjvJwT3hKmXF4dpqxmPO9SoNb2FsYXj/xEo0gHN+D5A==}
 
   backblaze-b2@1.7.1:
     resolution: {integrity: sha512-ns+oIO0NO5ysIIcs4xn2PfG34GlkGFLUckDWfQcsaCE2THDNRWzc5lWjR3LUrq6DA0E5KUGOhgkAs/q+QrgpNw==}
     engines: {node: '>=10.0'}
 
-  bson@7.1.1:
-    resolution: {integrity: sha512-TtJgBB+QyOlWjrbM+8bRgH84VM/xrDjyBFgSgGrfZF4xvt6gbEDtcswm27Tn9F9TWsjQybxT8b8VpCP/oJK4Dw==}
+  bson@7.2.0:
+    resolution: {integrity: sha512-YCEo7KjMlbNlyHhz7zAZNDpIpQbd+wOEHJYezv0nMYTn4x31eIUM2yomNNubclAt63dObUzKHWsBLJ9QcZNSnQ==}
     engines: {node: '>=20.19.0'}
 
   bytes@3.1.2:
@@ -255,8 +258,8 @@ packages:
     resolution: {integrity: sha512-2sJGJTaXIIaR1w4iJSNoN0hnMY7Gpc/n8D4qSCJw8QqFWXf7cuAgnEHxBpweaVcPevC2l3KpjYCx3NypQQgaJg==}
     engines: {node: '>= 0.8', npm: 1.2.8000 || >= 1.4.16}
 
-  dotenv@17.3.1:
-    resolution: {integrity: sha512-IO8C/dzEb6O3F9/twg6ZLXz164a2fhTnEWb95H23Dm4OuN+92NmEAlTrupP9VW6Jm3sO26tQlqyvyi4CsnY9GA==}
+  dotenv@17.4.2:
+    resolution: {integrity: sha512-nI4U3TottKAcAD9LLud4Cb7b2QztQMUEfHbvhTH09bqXTxnSie8WnjPALV/WMCrJZ6UV/qHJ6L03OqO3LcdYZw==}
     engines: {node: '>=12'}
 
   dunder-proto@1.0.1:
@@ -382,8 +385,8 @@ packages:
     resolution: {integrity: sha512-UqyYyH5YEXaJrf9S8E23GoJFQZXkBVJ9zYYMPGz919MSX1KuvAcycIuS0ci150HCoPf4XQVhQ84Qf8xRPWxFaQ==}
     engines: {node: '>= 7.6.0'}
 
-  koa@3.1.2:
-    resolution: {integrity: sha512-2LOQnFKu3m0VxpE+5sb5+BRTSKrXmNxGgxVRiKwD9s5KQB1zID/FRXhtzeV7RT1L2GVpdEEAfVuclFOMGl1ikA==}
+  koa@3.2.0:
+    resolution: {integrity: sha512-TrM4/tnNY7uJ1aW55sIIa+dqBvc4V14WRIAlGcWat9wV5pRS9Wr5Zk2ZTjQP1jtfIHDoHiSbPuV08P0fUZo2pg==}
     engines: {node: '>= 18'}
 
   lodash.merge@4.6.2:
@@ -427,8 +430,8 @@ packages:
     resolution: {integrity: sha512-irhhjRVLE20hbkRl4zpAYLnDMM+zIZnp0IDB9akAFFUZp/3XdOfwwddc7y6cNvF2WCEtfTYRwYbIfYa2kVY0og==}
     engines: {node: '>=20.19.0'}
 
-  mongodb@7.1.0:
-    resolution: {integrity: sha512-kMfnKunbolQYwCIyrkxNJFB4Ypy91pYqua5NargS/f8ODNSJxT03ZU3n1JqL4mCzbSih8tvmMEMLpKTT7x5gCg==}
+  mongodb@7.2.0:
+    resolution: {integrity: sha512-F/2+BMZtLVhY30ioZp0dAmZ+IRZMBqI+nrv6t5+9/1AIwCa8sMRC3jBf81lpxMhnZgqq8CoUD503Z1oZWq1/sw==}
     engines: {node: '>=20.19.0'}
     peerDependencies:
       '@aws-sdk/credential-providers': ^3.806.0
@@ -480,8 +483,9 @@ packages:
   path-to-regexp@8.3.0:
     resolution: {integrity: sha512-7jdwVIRtsP8MYpdXSwOS0YdD0Du+qOoF/AEPIt88PcCFrZCzx41oxku1jD88hZBwbNUIEfpqvuhjFaMAqMTWnA==}
 
-  proxy-from-env@1.1.0:
-    resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==}
+  proxy-from-env@2.1.0:
+    resolution: {integrity: sha512-cJ+oHTW1VAEa8cJslgmUZrc+sjRKgAKl3Zyse6+PV38hZe/V6Z14TbCuXcan9F9ghlz4QrFr2c92TNF82UkYHA==}
+    engines: {node: '>=10'}
 
   punycode@2.3.1:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
@@ -578,11 +582,11 @@ snapshots:
 
   '@hapi/bourne@3.0.0': {}
 
-  '@koa/bodyparser@6.1.0(koa@3.1.2)':
+  '@koa/bodyparser@6.1.0(koa@3.2.0)':
     dependencies:
       '@types/co-body': 6.1.3
       co-body: 6.2.0
-      koa: 3.1.2
+      koa: 3.2.0
       lodash.merge: 4.6.2
       type-is: 2.0.1
 
@@ -590,11 +594,11 @@ snapshots:
     dependencies:
       vary: 1.1.2
 
-  '@koa/router@15.3.1(koa@3.1.2)':
+  '@koa/router@15.4.0(koa@3.2.0)':
     dependencies:
       debug: 4.4.3
       http-errors: 2.0.1
-      koa: 3.1.2
+      koa: 3.2.0
       koa-compose: 4.1.0
       path-to-regexp: 8.3.0
     transitivePeerDependencies:
@@ -604,7 +608,7 @@ snapshots:
     dependencies:
       sparse-bitfield: 3.0.3
 
-  '@redis/client@5.11.0':
+  '@redis/client@5.12.1':
     dependencies:
       cluster-key-slot: 1.1.2
 
@@ -660,18 +664,18 @@ snapshots:
 
   '@types/koa-compose@3.2.9':
     dependencies:
-      '@types/koa': 3.0.1
+      '@types/koa': 3.0.2
 
   '@types/koa-send@4.1.6':
     dependencies:
-      '@types/koa': 3.0.1
+      '@types/koa': 3.0.2
 
   '@types/koa-static@4.0.4':
     dependencies:
-      '@types/koa': 3.0.1
+      '@types/koa': 3.0.2
       '@types/koa-send': 4.1.6
 
-  '@types/koa@3.0.1':
+  '@types/koa@3.0.2':
     dependencies:
       '@types/accepts': 1.3.7
       '@types/content-disposition': 0.5.9
@@ -684,7 +688,7 @@ snapshots:
 
   '@types/koa__cors@5.0.1':
     dependencies:
-      '@types/koa': 3.0.1
+      '@types/koa': 3.0.2
 
   '@types/node@25.0.9':
     dependencies:
@@ -716,28 +720,28 @@ snapshots:
 
   asynckit@0.4.0: {}
 
-  axios-retry@4.5.0(axios@1.13.6):
+  axios-retry@4.5.0(axios@1.15.2):
     dependencies:
-      axios: 1.13.6
+      axios: 1.15.2
       is-retry-allowed: 2.2.0
 
-  axios@1.13.6:
+  axios@1.15.2:
     dependencies:
       follow-redirects: 1.15.11
       form-data: 4.0.5
-      proxy-from-env: 1.1.0
+      proxy-from-env: 2.1.0
     transitivePeerDependencies:
       - debug
 
   backblaze-b2@1.7.1:
     dependencies:
-      axios: 1.13.6
-      axios-retry: 4.5.0(axios@1.13.6)
+      axios: 1.15.2
+      axios-retry: 4.5.0(axios@1.15.2)
       lodash: 4.17.23
     transitivePeerDependencies:
       - debug
 
-  bson@7.1.1: {}
+  bson@7.2.0: {}
 
   bytes@3.1.2: {}
 
@@ -794,7 +798,7 @@ snapshots:
 
   destroy@1.2.0: {}
 
-  dotenv@17.3.1: {}
+  dotenv@17.4.2: {}
 
   dunder-proto@1.0.1:
     dependencies:
@@ -928,7 +932,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  koa@3.1.2:
+  koa@3.2.0:
     dependencies:
       accepts: 1.3.8
       content-disposition: 1.0.1
@@ -978,10 +982,10 @@ snapshots:
       '@types/whatwg-url': 13.0.0
       whatwg-url: 14.2.0
 
-  mongodb@7.1.0:
+  mongodb@7.2.0:
     dependencies:
       '@mongodb-js/saslprep': 1.4.5
-      bson: 7.1.1
+      bson: 7.2.0
       mongodb-connection-string-url: 7.0.0
 
   ms@2.1.3: {}
@@ -1000,7 +1004,7 @@ snapshots:
 
   path-to-regexp@8.3.0: {}
 
-  proxy-from-env@1.1.0: {}
+  proxy-from-env@2.1.0: {}
 
   punycode@2.3.1: {}
 

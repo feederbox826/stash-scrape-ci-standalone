@@ -40,7 +40,7 @@ scrape-ci-standalone
     x-api-key header 
 `
 
-export type JobID = `v0-${string}`
+export type JobID = `${string}1`
 
 // short-unique-id
 // https://alex7kom.github.io/nano-nanoid-cc/
