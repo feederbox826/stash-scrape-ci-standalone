@@ -63,7 +63,7 @@ export const setLastScraperUpdate = async () => {
 // stores tag aliases
 export const getTagMappings = async (tags: String[]): Promise<tag[]> => {
   // convert tags to lowercase
-  const lowerTags = [... new Set(tags.map(tag => tag.toLowerCase()))];
+  const lowerTags = [... new Set(tags.map(tag => tag.trim().toLowerCase()))];
   const mappings: tag[] = [];
   for (const tag of lowerTags) {
     const match = await tagCollection.findOne({ lookup: tag });
