@@ -55,6 +55,17 @@ services:
     container_name: scrape_ci
     image: ghcr.io/feederbox826/scrape-ci:latest
     env_file: "scrape_ci.env"
+  caddy:
+    << : *user-defaults
+    container_name: caddy
+    image: caddy:2
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /home/stash/app/caddy/data:/data:rw
+      - /home/stash/app/caddy/config:/config:rw
+      - /home/stash/app/caddy/caddy:/etc/caddy:ro
   byparr:
     << : *user-defaults
     container_name: byparr

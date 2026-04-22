@@ -1,0 +1,8 @@
+scrape-ci.feederbox.cc {
+	reverse_proxy scrape_ci:3000
+	handle_path /stash {
+		reverse_proxy stash:9999/ {
+			header_up X-Forwarded-Prefix /stash
+		}
+	}
+}
