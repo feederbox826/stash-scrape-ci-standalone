@@ -2,7 +2,7 @@ import { MongoClient } from "mongodb";
 import { tag } from "../types/jobResult.js";
 import { genID } from "./utils.js"
 
-const uri = process.env.MONGODB_URI || "mongodb://localhost:27017/stash-ci";
+const uri = process.env.MONGODB_URI || "mongodb://mongodb:27017/stash-ci";
 const client = new MongoClient(uri);
 
 const db = client.db();

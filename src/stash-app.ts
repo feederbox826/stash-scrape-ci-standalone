@@ -9,7 +9,7 @@ export class StashApp {
   private STASH_URL: string
   private STASH_API_KEY: string | undefined
   constructor() {
-    this.STASH_URL = process.env.STASH_URL || "http://localhost:9999/graphql"
+    this.STASH_URL = process.env.STASH_URL || "http://stash:9999/graphql"
     this.STASH_API_KEY = process.env.STASH_API_KEY
   }
 
