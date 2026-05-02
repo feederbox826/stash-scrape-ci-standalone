@@ -19,6 +19,10 @@
             <div class="mb-3">
               <input id="scrape-url" type="text" placeholder="Enter URL to scrape" class="form-control" required autocomplete="off">
             </div>
+            <div class="mb-3 form-check">
+              <input id="scrape-rescrape" type="checkbox" class="form-check-input" value="">
+              <label class="form-check-label" for="scrape-rescrape">Re-scrape</label>
+            </div>
             <div class="mb-3">
               <select id="scrape-type" class="form-select" required autocomplete="off">
                 <option value="scene">Scene</option>
@@ -83,6 +87,7 @@
 
     function submitScrape() {
       const url = document.getElementById('scrape-url').value.trim();
+      const rescrape = document.getElementById('scrape-rescrape').checked;
       const scrapeType = document.getElementById('scrape-type').value;
       const auth = document.getElementById('scrape-auth').value.trim();
 
@@ -99,6 +104,9 @@
       localStorage.setItem('auth', authKey);
 
       const data = { url, scrapeType, auth: authKey };
+      if (rescrape) {
+        data.rescrape = true;
+      }
 
       fetch(apiURL, {
         method: 'POST',
