@@ -4,6 +4,11 @@ export type installedPackage = {
   date: string
 }
 
+export type localScraper = {
+  id: string,
+  sites: string[]
+}
+
 export type logEntry = {
   time: string,
   level: "Trace" | "Debug" | "Info" | "Warning" | "Error",
