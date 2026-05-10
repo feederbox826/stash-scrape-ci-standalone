@@ -1,6 +1,6 @@
 import { getLastScraperUpdate, setLastScraperUpdate } from "./db.js"
 import { scraperSearch } from "./scraper-index.js"
-import { installedPackage, logEntry } from "../types/stashapp.js"
+import { installedPackage, localScraper, logEntry } from "../types/stashapp.js"
 import axios from "axios"
 import { sceneResult, cleanSceneResult, stashInfo, partialJobResult } from "../types/jobResult.js"
 import crypto from "crypto"
@@ -86,9 +86,12 @@ export class StashApp {
     this.callGQL('mutation { updatePackages(type: Scraper) }')
       .then(data => data.updatePackages)
 
-  getExistingScrapers = async (): Promise<string[]> => this.callGQL(`query {
-      installedPackages(type: Scraper) { package_id }
-    }`).then(data => data.installedPackages.map((pkg: installedPackage) => pkg.package_id))
+  // Only checks scene scrapers for now.
+  getLocalScrapers = async (): Promise<localScraper[]> => this.callGQL(`query {
+      listScrapers(types: [SCENE]) { id, scene {urls} }
+    }`).then(data => data.listScrapers.map((scraper: {id: string, scene: {urls: string[]}}): localScraper => {
+      return {id: scraper.id, sites: scraper.scene.urls}
+    }))
 
   installPackage = (id: String): Promise<number> => this.callGQL(`mutation ($id: String!) {
     installPackages(
